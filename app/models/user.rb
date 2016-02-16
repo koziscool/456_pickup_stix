@@ -2,8 +2,9 @@ class User < ActiveRecord::Base
 
   has_secure_password
 
-  has_many :bookmarks
-  has_many :playlists
+  has_many :bookmarks    # through, source, foreign_key
+  has_many :playlists     # class_name, just need 15 mins for these,
+                          # dont' have it.
 
   validates :password, :length => { :in => 5..35 }, :allow_nil => true
 
