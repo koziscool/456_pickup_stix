@@ -15,13 +15,22 @@
     <%= csrf_meta_tags %>
   </head>
   <body>
-    
+    <%= render partial: 'flash' %>
     <% if signed_in_user? %>
       Welcome, <%= link_to current_user.first_name, current_user %>!
       <%= link_to "Logout", logout_path, :method => :delete %>
     <% else %>
       <%= link_to "Login", login_path %>
     <% end %>
+
+    <div class="nav col-xs-2">
+      <h4>Navigation Options</h4>
+      <div><%= link_to "Home", root_path %></div>
+      <div><%= link_to "Artists", users_path %></div>
+      <div><%= link_to "Users", users_path %></div>
+      <div><%= link_to "My Page", users_path %></div>
+      <div><%= link_to "Logoug", logout_path %></div>
+    </div>
 
     <%= yield %>
 

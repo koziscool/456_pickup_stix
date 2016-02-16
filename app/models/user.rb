@@ -2,6 +2,9 @@ class User < ActiveRecord::Base
 
   has_secure_password
 
+  has_many :bookmarks
+  has_many :playlists
+
   validates :password, :length => { :in => 5..35 }, :allow_nil => true
 
   def generate_token

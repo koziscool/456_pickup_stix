@@ -30,13 +30,16 @@ class ApplicationController < ActionController::Base
   protected
   def sign_in(user)
     session[:auth_token] = user.auth_token
+    session[:user_id] = user.id
     @current_user = user
     @current_user == user && session[:auth_token] == user.auth_token
   end
 
 
   def sign_out
+    puts "check this out"
     @current_user = session[:auth_token] = nil
+    session.delete(:user_id)
     @current_user.nil? && session[:auth_token].nil?
   end
 
