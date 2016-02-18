@@ -1,1 +1,5 @@
-<div class="text-center"><%= flash.notice %></div>
+
+<% flash.each do |type, message| %>
+    <strong><%= type %>! <%= message %></strong>
+<% end %> 
+

@@ -37,7 +37,6 @@ class ApplicationController < ActionController::Base
 
 
   def sign_out
-    puts "check this out"
     @current_user = session[:auth_token] = nil
     session.delete(:user_id)
     @current_user.nil? && session[:auth_token].nil?
