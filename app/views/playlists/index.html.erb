@@ -1,2 +1,8 @@
-<%= render partial: 'flash' %>
 
+<%= render "shared/flash" %>
+
+<h4>Listing Artists</h4>
+<% @playlists.each do |list| %>
+  <%= link_to list.name, playlist_path(list) %><br/>
+<% end %>
+<br>

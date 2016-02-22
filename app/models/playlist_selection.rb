@@ -1,9 +1,7 @@
 class PlaylistSelection < ActiveRecord::Base
+  belongs_to :playlist
+  belongs_to :song
 
-  belongs_to    :playlist 
-  belongs_to    :song
-
-  validates :playlist, presence: true
-  validates :song, presence: true
-
+  validates :song, :presence => :true
+  validates :playlist, :presence => :true
 end

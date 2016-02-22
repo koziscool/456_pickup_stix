@@ -1,6 +1,30 @@
-<%= render partial: 'flash' %>
+<h3>playlist here</h3>
+<%= @playlist.name %><br/>
 
-<h1>playlist here</h1>
-<% @playlist.songs.each do |song| %>
-  <%= link_to song.name, song_path(song) %>
+<% current_user_bookmark = user_has_bookmarked_playlist(current_user, @playlist) %> 
+<% if current_user_bookmark %> 
+ <%= form_for current_user_bookmark, url: bookmark_path(current_user_bookmark), method: :delete  do |f| %>
+    <%= f.hidden_field :user_id, value: current_user.id %>
+    <%= f.hidden_field :playlist_id, value: @playlist.id %>
+    <%= f.submit "unbookmark" %>
+  <% end %>
+<% else %>
+  <%= form_for Bookmark.new do |f| %>
+    <%= f.hidden_field :bookmarkable_id, value: @playlist.id %>
+    <%= f.hidden_field :bookmarkable_type, value: "Playlist" %>
+    <%= f.hidden_field :user_id, value: current_user.id %>
+    <%= f.submit "bookmark"%>
+  <% end %>
 <% end %>
+
+<br>
+<% @playlist.playlist_selections.each do |selection| %>
+  <%= link_to selection.song.artist.name, artist_path(selection.song.artist) %><br>
+  <%= link_to selection.song.name, song_path(selection.song) %>
+  <%= link_to "Delete", playlist_selection_path(selection), method: :delete %><br><br>
+<% end %>
+
+<br>
+<%= link_to "Edit", edit_playlist_path(@playlist) %>
+<td> <%= link_to "Delete", playlist_path(@playlist), method: :delete %>
+  

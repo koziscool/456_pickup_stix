@@ -1,29 +1,46 @@
 class PlaylistSelectionsController < ApplicationController
 
-  before_action :require_login
+  before_action :require_current_user
+
 
   def create
-    @playlist_selection = PlaylistSelection.new( selection_params )
+    @playlist_selection = PlaylistSelection.new( playlist_selection_params )
     if @playlist_selection.save
-      flash[:success] = "created playlist selection!"
+      flash[:success] = "added to playlist successfully!"
+      redirect_to root_path
     else
-      flash[:error] = "did not create selection"
+      if !signed_in_user?
+         flash[:error] = "not added successfully!"
+         render :new
+      else
+        flash[:error] = "not added successfully!"
+        redirect_to root_url
+      end   
     end
-    redirect_to :back
+
   end
 
   def destroy
-    @playlist_selection = PlaylistSelection.find(params[:id])
-    if @playlist_selection.destroy
-      flash[:success] = "destroyed playlist selection!"
+
+    # also a hack, maybe a better way to do this
+    if params[:id].to_i == 0
+      @playlist_selection = nil
     else
-      flash[:error] = "did not destroy selection"
+      @playlist_selection = PlaylistSelection.find(params[:id])
     end
-    redirect_to :back
+
+    if @playlist_selection && @playlist_selection.destroy
+      flash[:success] = "selection removed!"
+      redirect_to root_url
+    else    
+      flash[:error] = "selection not removed!"
+      redirect_to root_url
+    end
+  end
+  
+
+  def playlist_selection_params
+     params.require(:playlist_selection).permit( :song_id, :playlist_id )
   end
 
-  private
-  def selection_params
-    params.require(:playlist_selection).permit(:playlist_id, :song_id)
-  end
 end

@@ -1,27 +1,9 @@
-<%= render partial: 'flash' %>
 
-<h1>Listing Users</h1>
+<%= render "shared/flash" %>
 
-<table>
-  <thead>
-    <tr>
-      <th>Username</th>
-      <th>Email</th>
-      <th colspan="3"></th>
-    </tr>
-  </thead>
+<h4>Listing users</h4>
+<% @users.each do |user| %>
+  <%= link_to user.name_and_count, user_path(user) %><br/>
 
-  <tbody>
-    <% @users.each do |user| %>
-      <tr>
-        <td><%= user.first_name %></td>
-        <td><%= user.last_name %></td>
-        <td><%= "playlists: #{user.playlists.length}" %></td>
-        <td><%= link_to 'Show', user %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
-
+<% end %>
 <br>
-

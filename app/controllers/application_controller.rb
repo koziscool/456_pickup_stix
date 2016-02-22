@@ -30,7 +30,6 @@ class ApplicationController < ActionController::Base
   protected
   def sign_in(user)
     session[:auth_token] = user.auth_token
-    session[:user_id] = user.id
     @current_user = user
     @current_user == user && session[:auth_token] == user.auth_token
   end
@@ -38,7 +37,6 @@ class ApplicationController < ActionController::Base
 
   def sign_out
     @current_user = session[:auth_token] = nil
-    session.delete(:user_id)
     @current_user.nil? && session[:auth_token].nil?
   end
 
@@ -59,4 +57,13 @@ class ApplicationController < ActionController::Base
       redirect_to root_path
     end
   end
+
+  def require_current_user
+    # don't forget that params is a string!!!
+    if !current_user
+      flash[:error] = "You're not authorized to view this"
+      redirect_to login_path
+    end
+  end 
+
 end

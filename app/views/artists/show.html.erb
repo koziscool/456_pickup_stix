@@ -1,7 +1,30 @@
-<%= render partial: 'flash' %>
+
+<%= render "shared/flash" %>
 
 <h1>Artist Crap here</h1>
 
+
+<%= link_to @artist.name, artist_path(@artist) %><br>
+
+
+<% current_user_bookmark = user_has_bookmarked_artist(current_user, @artist) %> 
+<% if current_user_bookmark %> 
+ <%= form_for current_user_bookmark, url: bookmark_path(current_user_bookmark), method: :delete  do |f| %>
+    <%= f.hidden_field :user_id, value: current_user.id %>
+    <%= f.hidden_field :artist_id, value: @artist.id %>
+    <%= f.submit "unbookmark" %>
+  <% end %>
+<% else %>
+  <%= form_for Bookmark.new do |f| %>
+    <%= f.hidden_field :bookmarkable_id, value: @artist.id %>
+    <%= f.hidden_field :bookmarkable_type, value: "Artist" %>
+    <%= f.hidden_field :user_id, value: current_user.id %>
+    <%= f.submit "bookmark"%>
+  <% end %>
+<% end %>
+
+
+<br>
 <% @artist.songs.each do |song| %>
   <%= link_to song.name, song_path(song) %>
 <% end %>

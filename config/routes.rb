@@ -3,15 +3,16 @@ Rails.application.routes.draw do
   root "users#index"
 
   resource :session, :only => [:new, :create, :destroy]
-  get "login" => "sessions#new"
+  get 'login' => 'users#new', as: :login
   delete "logout" => "sessions#destroy"
 
-  resources :users
-  resources :songs, :only => [:show]
   resources :artists, :only => [:index, :show]
+  resources :songs, :only => [ :show ]
+  resources :users 
   resources :playlists
-  resources :playlist_selections, :only => [:create, :destroy]
-  resources :bookmarks, :only => [ :create, :destroy]
+  resources :playlist_selections, :only => [ :create, :destroy  ]
+  resources :bookmarks, :only => [ :create, :destroy  ]
+  resources :followings
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

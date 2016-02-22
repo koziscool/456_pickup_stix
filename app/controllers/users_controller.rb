@@ -1,9 +1,11 @@
 class UsersController < ApplicationController
 
   skip_filter :authenticate, :only => [ :show, :index ]  
-  before_action :require_login, :except => [:new, :create]
+  before_action :require_login, :except => [:new, :create, :show]
   before_action :require_current_user, :only => [:edit, :update, :destroy]
-  
+
+
+
   def index
     @users = User.all
   end
@@ -13,50 +15,55 @@ class UsersController < ApplicationController
   end
 
   def create
-    @user = User.new(user_params)
-    if @user.save
-      sign_in(@user) 
-      flash[:success] = "created new user"
-      redirect_to @user
+
+    if signed_in_user?
+       flash[:error] = "already signed in"
+       redirect_to root_path
     else
-      flash.now[:error] = "did not create user"
-      render :new
+      @user = User.new(user_params)
+      if @user.save
+        flash[:success] = "created successfully!"
+        sign_in(@user)
+        redirect_to user_path(@user)
+      else
+        flash[:error] = "user not created"
+        render :new
+      end
     end
   end
 
+
   def show
-    @user = User.find(params[:id])
+    @user = User.find( params[:id] )
   end
 
   def edit
-    @user = User.find(params[:id])
+    @user = User.find( params[:id])
   end
 
   def update
-    @user = User.find(params[:id])
-    if @user == current_user && current_user.update( user_params )
-      flash[:success] = "updated user"
-      redirect_to current_user
+    @user = User.find( params[:id])
+    if @user.update( user_params )
+      flash[:notice] = "updated successfully"
+      redirect_to user_path(current_user)
     else
-      flash.now[:error] = "did not update user"
+      flash[:error] = "not successfully updated"
       render :edit
-     end
+    end
   end
 
   def destroy
-    @user = User.find(params[:id])
-    if @user == current_user && current_user.desttroy
-      sign_out
-      flash[:success] = "deleted user"
+    @user = User.find( params[:id])
+    if @user.destroy
+      flash[:notice] = "Destroyed successfully."
       redirect_to root_path
     else
-      flash[:error] = "did not delete user"
-      redirect_to :back
+      render :edit
     end
   end
 
   private
-    def user_params
-      params.require(:user).permit(:first_name, :last_name, :email, :password, :password_confirmation)
-    end
+  def user_params
+    params.require(:user).permit( :first_name, :last_name, :email, :password, :password_confirmation )
+  end
 end

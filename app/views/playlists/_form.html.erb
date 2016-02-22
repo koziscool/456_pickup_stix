@@ -1,0 +1,7 @@
+<% list = @playlist || Playlist.new %>
+<%= form_for list do |f| %>
+  <%= f.label 'Playlist Name: '%>
+  <%= f.text_field :name %>
+  <%= f.hidden_field :user_id, value: current_user.id %>
+  <%= f.submit %>
+<% end %>

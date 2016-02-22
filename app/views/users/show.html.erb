@@ -1,4 +1,36 @@
-<%= render partial: 'flash' %>
-<% @user.playlists.each do |list| %>
-  <%= link_to list.name, playlist_path(list) %>
-<% end %>
+ 
+  <%= @user.name %>
+  <br/><br/>
+  Playlists<br>
+  <% @user.playlists.each do |list| %>
+    <%= link_to list.name, playlist_path(list) %><br/>
+  <% end %>
+  <br/><br/>
+  Bookmarks<br>
+  <% @user.bookmarks.each do |mark| %>
+    <% the_path = get_mark_show_path(mark) %>
+    <%= link_to mark.bookmarkable.name, the_path %><br/>
+  <% end %>
+
+  <br/>
+  <%= link_to "New playlist", new_playlist_path %>
+
+
+  <br/><br/>
+
+  <% if @user == current_user %>
+    <%= link_to "Edit User", edit_user_path(@user) %>
+    <%= link_to "Delete User", user_path(@user), :method => :delete %>
+  <% else %>
+    <% if following_exists?( current_user, @user ) %>
+      <%= link_to "Unfollow Me", following_path(
+        :follower_id => current_user.id,
+        :followed_id => @user.id,
+         ),  :method => :delete %>
+    <% else %>
+      <%= link_to "Follow Me", followings_path(
+        :follower_id => current_user.id,
+        :followed_id => @user.id,
+         ) %>
+    <% end %>
+  <% end %>
